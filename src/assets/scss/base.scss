@@ -1,0 +1,14 @@
+.container {
+  width: 1226px;
+  margin: 0 auto;
+}
+.clearfix:after {
+  display: block;
+  height: 0;
+  clear: both;
+  overflow: hidden;
+  content: "";
+}
+.clearfix {
+  *zoom: 1;
+}
