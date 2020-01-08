@@ -64,8 +64,21 @@
           </template>
         </swiper>
       </div>
-      <div class="ads-box"></div>
-      <div class="banner"></div>
+      <div class="ads-box">
+        <router-link
+          class="ads-link"
+          v-for="(item, index) in adsList"
+          :key="index"
+          :to="{name: 'product', params: {id: item.id}}"
+        >
+          <img class="ads-img" :src="item.img" :alt="item.name" />
+        </router-link>
+      </div>
+      <div class="banner">
+        <router-link class="banner-link" to="{name: 'product', params: {id: 30}}">
+          <img src="/imgs/banner-1.png" alt="小米CC全新系列发布会" />
+        </router-link>
+      </div>
       <div class="product-box"></div>
     </div>
     <service-bar></service-bar>
@@ -159,6 +172,28 @@ export default {
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0]
+      ],
+      adsList: [
+        {
+          id: 33,
+          img: '/imgs/ads/ads-1.png',
+          name: '小米9'
+        },
+        {
+          id: 48,
+          img: '/imgs/ads/ads-2.jpg',
+          name: 'Redmi K20 Pro'
+        },
+        {
+          id: 45,
+          img: '/imgs/ads/ads-3.png',
+          name: 'Redmi Note 7'
+        },
+        {
+          id: 47,
+          img: '/imgs/ads/ads-4.jpg',
+          name: '小米MIX3'
+        }
       ]
     }
   }
@@ -253,6 +288,17 @@ export default {
         height: 100%;
       }
     }
+  }
+  .ads-box {
+    @include flex();
+    margin: 14px 0 30px 0;
+    .ads-link {
+      width: 296px;
+      height: 167px;
+    }
+  }
+  .banner {
+    margin-bottom: 50px;
   }
 }
 </style>
