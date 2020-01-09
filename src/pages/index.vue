@@ -95,7 +95,7 @@
                 <div class="item-info">
                   <h3 class="item-name">{{sub.name}}</h3>
                   <p class="item-subtitle">{{sub.subtitle}}</p>
-                  <p class="item-price">{{sub.price | currency}}</p>
+                  <p class="item-price" @click="addCart(sub.id)">{{sub.price | currency}}</p>
                 </div>
               </div>
             </div>
@@ -104,6 +104,19 @@
       </div>
     </div>
     <service-bar></service-bar>
+    <modal
+      title="提示"
+      confirmTxt="查看购物车"
+      btnType="1"
+      modalType="middle"
+      :showModal="showModal"
+      @submit="goToCart"
+      @cancel="showModal = false"
+    >
+      <template v-slot:modal-body>
+        <p>商品添加成功！</p>
+      </template>
+    </modal>
   </div>
 </template>
 
@@ -111,12 +124,14 @@
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import ServiceBar from '../components/ServiceBar'
+import Modal from '../components/Modal'
 export default {
   name: 'index',
   components: {
     swiper,
     swiperSlide,
-    ServiceBar
+    ServiceBar,
+    Modal
   },
   data() {
     return {
@@ -217,7 +232,8 @@ export default {
           name: '小米MIX3'
         }
       ],
-      phoneList: []
+      phoneList: [],
+      showModal: false
     }
   },
   mounted() {
@@ -233,6 +249,19 @@ export default {
       }).then(res => {
         this.phoneList = [res.list.slice(6, 10), res.list.slice(10, 14)];
       })
+    },
+    addCart() {
+      this.showModal = true;
+      return;
+      // this.axios.post('/carts', {
+      //   productId: id,
+      //   selected: true
+      // }).then(() => {}).catch(() => {
+      //   this.showModal = true;
+      // })
+    },
+    goToCart() {
+      this.$router.push('/cart');
     }
   }
 }
