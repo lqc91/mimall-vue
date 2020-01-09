@@ -15,7 +15,7 @@
                     >
                       <img
                         class="citem-img"
-                        :src="sub ? sub.img : '/imgs/item-box-1.png'"
+                        v-lazy="sub ? sub.img : '/imgs/item-box-1.png'"
                         :alt="sub ? sub.name : '小米CC9'"
                       />
                       {{sub ? sub.name : '小米CC9'}}
@@ -71,7 +71,7 @@
           :key="index"
           :to="{name: 'product', params: {id: item.id}}"
         >
-          <img class="ads-img" :src="item.img" :alt="item.name" />
+          <img class="ads-img" v-lazy="item.img" :alt="item.name" />
         </router-link>
       </div>
       <div class="banner">
@@ -85,13 +85,13 @@
         <h2 class="product-title">手机</h2>
         <div class="wrapper">
           <router-link class="banner-left" :to="{name: 'product', params: {id: 35}}">
-            <img src="/imgs/mix-alpha.jpg" alt="mix alpha" />
+            <img v-lazy="'/imgs/mix-alpha.jpg'" alt="mix alpha" />
           </router-link>
           <div class="list-box">
             <div class="list" v-for="(item, index) in phoneList" :key="index">
               <div class="item" v-for="(sub, idx) in item" :key="idx">
                 <span :class="{'new-pro': idx % 2 === 0}">新品</span>
-                <img class="item-img" :src="sub.mainImage" :alt="sub.name" />
+                <img class="item-img" v-lazy="sub.mainImage" :alt="sub.name" />
                 <div class="item-info">
                   <h3 class="item-name">{{sub.name}}</h3>
                   <p class="item-subtitle">{{sub.subtitle}}</p>

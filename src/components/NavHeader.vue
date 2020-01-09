@@ -33,7 +33,7 @@
                   :to="{name: 'product', params: {id: item.id}}"
                   target="_blank"
                 >
-                  <img class="product-img" :src="item.mainImage" :alt="item.name" />
+                  <img class="product-img" v-lazy="item.mainImage" :alt="item.name" />
                   <span class="product-name">{{item.name}}</span>
                   <span class="product-price">{{item.price | currency}}</span>
                 </router-link>
@@ -51,7 +51,7 @@
                 <a class="product-link" href="https://www.mi.com/redmitv/70" target="_blank">
                   <img
                     class="product-img"
-                    src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6917267948c54c647d2009a98637aac6.jpg"
+                    v-lazy="'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6917267948c54c647d2009a98637aac6.jpg'"
                     alt
                   />
                   <span class="product-name">Redmi 红米电视 70英寸 R70A</span>
@@ -62,7 +62,7 @@
                 <a class="product-link" href="https://www.mi.com/arttv/" target="_blank">
                   <img
                     class="product-img"
-                    src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/00f597a8725eee9245e383c35cd4f7b6.jpg"
+                    v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/00f597a8725eee9245e383c35cd4f7b6.jpg'"
                     alt
                   />
                   <span class="product-name">小米壁画电视 65英寸</span>
@@ -77,7 +77,7 @@
                 >
                   <img
                     class="product-img"
-                    src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/a40904b6a053b73b631a152334388d0e.jpg"
+                    v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/a40904b6a053b73b631a152334388d0e.jpg'"
                     alt
                   />
                   <span class="product-name">小米全面屏电视E55A</span>
@@ -88,7 +88,7 @@
                 <a class="product-link" href="https://www.mi.com/mitv4A/32/" target="_blank">
                   <img
                     class="product-img"
-                    src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/e8f4e22f6d591825f8f150b3309c750b.png"
+                    v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/e8f4e22f6d591825f8f150b3309c750b.png'"
                     alt
                   />
                   <span class="product-name">小米电视4A 32英寸</span>
@@ -99,7 +99,7 @@
                 <a class="product-link" href="https://www.mi.com/mitv4A/55/" target="_blank">
                   <img
                     class="product-img"
-                    src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/bf72a3e9a6e799cb71ecfa7d80465351.jpg"
+                    v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/bf72a3e9a6e799cb71ecfa7d80465351.jpg'"
                     alt
                   />
                   <span class="product-name">小米电视4A 55英寸</span>
@@ -110,7 +110,7 @@
                 <a class="product-link" href="https://www.mi.com/mitv4A/65" target="_blank">
                   <img
                     class="product-img"
-                    src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/bd922870295a97a0972eaba5af92129e.jpg"
+                    v-lazy="'https://cdn.cnbj0.fds.api.mi-img.com/b2c-mimall-media/bd922870295a97a0972eaba5af92129e.jpg'"
                     alt
                   />
                   <span class="product-name">小米电视4A 65英寸</span>
