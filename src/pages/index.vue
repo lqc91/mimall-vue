@@ -79,7 +79,29 @@
           <img src="/imgs/banner-1.png" alt="小米CC全新系列发布会" />
         </router-link>
       </div>
-      <div class="product-box"></div>
+    </div>
+    <div class="product-box">
+      <div class="container">
+        <h2 class="product-title">手机</h2>
+        <div class="wrapper">
+          <router-link class="banner-left" :to="{name: 'product', params: {id: 35}}">
+            <img src="/imgs/mix-alpha.jpg" alt="mix alpha" />
+          </router-link>
+          <div class="list-box">
+            <div class="list" v-for="(item, index) in phoneList" :key="index">
+              <div class="item" v-for="(sub, idx) in item" :key="idx">
+                <span :class="{'new-pro': idx % 2 === 0}">新品</span>
+                <img class="item-img" :src="sub.mainImage" :alt="sub.name" />
+                <div class="item-info">
+                  <h3 class="item-name">{{sub.name}}</h3>
+                  <p class="item-subtitle">{{sub.subtitle}}</p>
+                  <p class="item-price">{{sub.price | currency}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <service-bar></service-bar>
   </div>
@@ -194,7 +216,23 @@ export default {
           img: '/imgs/ads/ads-4.jpg',
           name: '小米MIX3'
         }
-      ]
+      ],
+      phoneList: []
+    }
+  },
+  mounted() {
+    this.init();
+  },
+  methods: {
+    init() {
+      this.axios.get('/products', {
+        params: {
+          categoryId: 100012,
+          pageSize: 14
+        }
+      }).then(res => {
+        this.phoneList = [res.list.slice(6, 10), res.list.slice(10, 14)];
+      })
     }
   }
 }
@@ -291,7 +329,7 @@ export default {
   }
   .ads-box {
     @include flex();
-    margin: 14px 0 30px 0;
+    margin: 14px 0 30px;
     .ads-link {
       width: 296px;
       height: 167px;
@@ -299,6 +337,84 @@ export default {
   }
   .banner {
     margin-bottom: 50px;
+  }
+  .product-box {
+    padding: 30px 0 50px;
+    background-color: $colorJ;
+    .product-title {
+      height: 22px;
+      line-height: 22px;
+      margin-bottom: 20px;
+      font-size: $fontF;
+      color: $colorB;
+    }
+    .wrapper {
+      display: flex;
+      .banner-left {
+        width: 224px;
+        height: 620px;
+        margin-right: 16px;
+      }
+      .list-box {
+        .list {
+          @include flex();
+          width: 986px;
+          margin-bottom: 14px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+          .item {
+            width: 236px;
+            height: 302px;
+            background-color: $colorG;
+            text-align: center;
+            span {
+              display: inline-block;
+              width: 67px;
+              height: 24px;
+              line-height: 24px;
+              color: $colorG;
+              font-size: $fontJ;
+              &.new-pro {
+                background-color: #7ecf68;
+              }
+              &.kill-pro {
+                background-color: #e82626;
+              }
+            }
+            .item-img {
+              width: 100%;
+              height: 195px;
+            }
+            .item-info {
+              .item-name {
+                font-size: $fontJ;
+                color: $colorB;
+                line-height: 14px;
+                font-weight: bold;
+              }
+              .item-subtitle {
+                color: $colorD;
+                line-height: 14px;
+                margin: 6px auto 10px;
+              }
+              .item-price {
+                color: #f20a0a;
+                font-size: $fontJ;
+                font-weight: bold;
+                cursor: pointer;
+                &:after {
+                  content: "";
+                  @include bgImg(22px, 22px, "/imgs/icon-cart-hover.png");
+                  margin-left: 5px;
+                  vertical-align: middle;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>

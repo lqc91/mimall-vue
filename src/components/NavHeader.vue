@@ -140,12 +140,6 @@ export default {
       phoneList: []
     }
   },
-  filters: {
-    currency(value) {
-      if (!value) return
-      return '￥' + value.toFixed(2) + '元'
-    }
-  },
   mounted() {
     this.getProductList()
   },
@@ -157,9 +151,7 @@ export default {
           pageSize: 6
         }
       }).then(res => {
-        if (res.list.length >= 6) {
-          this.phoneList = res.list.slice(0, 6);
-        }
+        this.phoneList = res.list;
       })
     }
   }
@@ -262,6 +254,7 @@ export default {
             width: 1226px;
             height: 0;
             opacity: 0;
+            z-index: 10;
             overflow: hidden;
             background-color: $colorG;
             box-shadow: 0px 7px 6px 0px rgba(0, 0, 0, 0.11);
