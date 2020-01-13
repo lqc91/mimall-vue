@@ -49,7 +49,7 @@
         </div>
         <swiper :options="swiperOption">
           <swiper-slide v-for="(item, index) in slideList" :key="index">
-            <router-link :to="{name: 'product', params: {id: item.id}}">
+            <router-link :to="{name: 'product', params: {id: item.id ? item.id : 30}}">
               <img class="slide-img" :src="item.img" :alt="item.name" />
             </router-link>
           </swiper-slide>
@@ -75,7 +75,7 @@
         </router-link>
       </div>
       <div class="banner">
-        <router-link class="banner-link" to="{name: 'product', params: {id: 30}}">
+        <router-link class="banner-link" :to="{name: 'product', params: {id: 30}}">
           <img src="/imgs/banner-1.png" alt="小米CC全新系列发布会" />
         </router-link>
       </div>
@@ -366,6 +366,10 @@ export default {
   }
   .banner {
     margin-bottom: 50px;
+    font-size: 0;
+    &-link {
+      display: inline-block;
+    }
   }
   .product-box {
     padding: 30px 0 50px;
