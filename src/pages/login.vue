@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   name: 'login',
   data() {
@@ -97,10 +98,15 @@ export default {
         this.$cookie.set('userId', res.id, {
           expires: '1M'
         });
-        // to do: 保存用户名
+        // 使用 dispatch
+        // this.$store.dispatch('saveUserName', res.username)
+        // 使用 mapActions
+        this.saveUserName(res.username);
         this.$router.push('/index');
       })
     },
+    // 使用 mapActions
+    ...mapActions(['saveUserName']),
     register() {
       this.axios.post('/user/register', {
         username: 'admin1',

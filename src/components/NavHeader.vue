@@ -13,7 +13,8 @@
           <router-link class="topbar-link" to="/login" v-else>登录</router-link>
           <router-link class="topbar-link" to="/order" v-if="username">我的订单</router-link>
           <router-link class="topbar-link topbar-cart" to="/cart">
-            <span class="icon-cart"></span>购物车
+            <span class="icon-cart"></span>
+            购物车({{cartCount}})
           </router-link>
         </div>
       </div>
@@ -132,13 +133,24 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: 'nav-header',
   data() {
     return {
-      username: '',
       phoneList: []
     }
+  },
+  computed: {
+    // 不使用 mapState
+    // username() {
+    //   return this.$store.state.username;
+    // },
+    // cartCount() {
+    //   return this.$store.state.cartCount;
+    // }
+    // 使用 mapState
+    ...mapState(['username', 'cartCount'])
   },
   mounted() {
     this.getProductList()
