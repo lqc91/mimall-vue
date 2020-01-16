@@ -1,17 +1,14 @@
 <template>
   <div class="product">
-    <product-param class="product-param">
+    <product-param :title="product.name" class="product-param">
       <template v-slot:buy>
-        <button class="btn">立即购买</button>
+        <button class="btn" @click="buy">立即购买</button>
       </template>
     </product-param>
     <section class="product-desc">
       <div class="desc-1">
-        <h1 class="title">
-          小米
-          <span class="num">8</span>
-        </h1>
-        <h4 class="subtitle">8周年旗舰版</h4>
+        <h1 class="title">{{product.name}}</h1>
+        <h4 class="subtitle">{{product.subtitle}}</h4>
         <p class="feature">
           <span class="txt">全球首款双频 GPS</span>
           <span class="vertical-line">|</span>
@@ -24,12 +21,12 @@
         <div class="price">
           <p class="act">
             <span class="sign">￥</span>
-            <span>2599</span>
+            <span>{{product.price}}</span>
           </p>
-          <p class="origin">
+          <!-- <p class="origin">
             <span class="sign">￥</span>
             <span>2999</span>
-          </p>
+          </p>-->
         </div>
       </div>
       <div class="desc-2">
@@ -67,10 +64,10 @@
         </div>-->
         <!-- animation 实现动画 -->
         <div class="container" @click="showSlide = 'slideDown'"></div>
-        <div class="video-box">
-          <div class="overlay" v-if="showSlide === 'slideDown'"></div>
+        <div class="video-box" v-show="showSlide">
+          <div class="overlay"></div>
           <div class="video" :class="showSlide">
-            <span @click="showSlide = 'slideUp'" class="icon-close"></span>
+            <span @click="closeVideo" class="icon-close"></span>
             <video src="/imgs/product/video.mp4" muted autoplay controls="controls"></video>
           </div>
         </div>
@@ -96,6 +93,7 @@ export default {
       // showSlide: false,
       // animation 实现动画
       showSlide: '',
+      product: {}, // 商品信息
       swiperOption: {
         autoplay:true,
         loop:true,
@@ -131,6 +129,27 @@ export default {
         }
       ]
     }
+  },
+  mounted() {
+    this.getProductInfo();
+  },
+  methods: {
+    closeVideo() {
+      this.showSlide = "slideUp";
+      setTimeout(() => {
+        this.showSlide = "";
+      }, 600);
+    },
+    getProductInfo() {
+      let id = this.$route.params.id;
+      this.axios.get(`/products/${id}`).then(res => {
+        this.product = res;
+      })
+    },
+    buy() {
+      let id = this.$route.params.id;
+      this.$router.push(`/detail/${id}`);
+    }
   }
 }
 </script>
@@ -162,7 +181,7 @@ export default {
       .subtitle {
         font-size: $fontE;
         line-height: 30px;
-        letter-spacing: 20px;
+        letter-spacing: 5px;
         font-weight: normal;
       }
       .feature {
@@ -318,21 +337,21 @@ export default {
           @keyframes slideDown {
             from {
               top: -50%;
-              opacity:0;
-            }
-            to{
-              top:50%;
-              opacity:1;
-            }
-          }
-          @keyframes slideUp{
-            from {
-              top: 50%;
-              opacity:1;
+              opacity: 0;
             }
             to {
-              top:-50%;
-              opacity:0;
+              top: 50%;
+              opacity: 1;
+            }
+          }
+          @keyframes slideUp {
+            from {
+              top: 50%;
+              opacity: 1;
+            }
+            to {
+              top: -50%;
+              opacity: 0;
             }
           }
           position: fixed;
@@ -343,13 +362,13 @@ export default {
           width: 1000px;
           height: 536px;
           opacity: 0;
-          &.slideDown{
-            animation: slideDown .6s linear;
-            top:50%;
-            opacity:1;
+          &.slideDown {
+            animation: slideDown 0.6s linear;
+            top: 50%;
+            opacity: 1;
           }
-          &.slideUp{
-            animation: slideUp .6s linear;
+          &.slideUp {
+            animation: slideUp 0.6s linear;
           }
           .icon-close {
             position: absolute;
