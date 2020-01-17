@@ -250,15 +250,16 @@ export default {
         this.phoneList = [res.list.slice(6, 10), res.list.slice(10, 14)];
       })
     },
-    addCart() {
-      this.showModal = true;
-      return;
-      // this.axios.post('/carts', {
-      //   productId: id,
-      //   selected: true
-      // }).then(() => {}).catch(() => {
-      //   this.showModal = true;
-      // })
+    addCart(id) {
+      this.axios.post('/carts', {
+        productId: id,
+        selected: true
+      }).then((res = {cartTotalQuantity: 0}) => {
+        this.$store.dispatch('saveCartCount', res.cartTotalQuantity);
+        this.showModal = true;
+      }).catch(() => {
+        this.showModal = true;
+      })
     },
     goToCart() {
       this.$router.push('/cart');

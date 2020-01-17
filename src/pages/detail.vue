@@ -1,6 +1,6 @@
 <template>
   <div class="detail">
-    <product-param class="product-param"></product-param>
+    <product-param class="product-param" :title="product.name"></product-param>
     <div class="main">
       <div class="container">
         <swiper :options="swiperOption" class="swiper-container">
@@ -14,37 +14,36 @@
         </swiper>
         <div class="info">
           <div class="base">
-            <h2 class="title">小米8</h2>
-            <p
-              class="subtitle"
-            >相机全新升级 / 960帧超慢动作 / 手持超级夜景 / 全球首款双频GPS / 骁龙845处理器 / 红外人脸解锁 / AI变焦双摄 / 三星 AMOLED 屏</p>
+            <h2 class="title">{{product.name}}</h2>
+            <p class="subtitle">{{product.subtitle}}</p>
             <p class="tag">小米自营</p>
-            <p class="price">2599元</p>
+            <p class="price">{{product.price}}元</p>
           </div>
           <div class="addr">
             <p class="default">
               <i class="icon-loc"></i>
               <span>北京 北京市 朝阳区 安定门街道</span>
             </p>
-            <p class="stock">有现货</p>
+            <p class="stock" v-if="product.stock">有现货</p>
+            <p class="stock" v-else>该地区暂时缺货</p>
           </div>
           <div class="type">
             <h3 class="title">选择版本</h3>
             <ul>
-              <li class="item selected">
+              <li class="item" :class="{checked: version === 1}" @click="version = 1">
                 <span class="name">6GB+64GB 全网通</span>
-                <span class="price">1099元</span>
+                <span class="price">{{product.price}}元</span>
               </li>
-              <li class="item">
+              <li class="item" :class="{checked: version === 2}" @click="version = 2">
                 <span class="name">4GB+64GB 移动4G</span>
-                <span class="price">1049元</span>
+                <span class="price">{{product.price}}元</span>
               </li>
             </ul>
           </div>
           <div class="type">
             <h3 class="title">选择颜色</h3>
             <ul>
-              <li class="item selected">
+              <li class="item checked">
                 <i class="icon-color"></i>
                 <span class="name">深空灰</span>
               </li>
@@ -53,14 +52,16 @@
           <div class="selected">
             <ul>
               <li class="item">
-                <p class="version">小米8 6GB+64GB 全网通 深灰色</p>
-                <p class="price">1099元</p>
+                <p
+                  class="version"
+                >{{product.name}} {{version === 1 ? '6GB+64GB 全网通' : '4GB+64GB 移动4G'}} 深灰色</p>
+                <p class="price">{{product.price}}元</p>
               </li>
             </ul>
-            <p class="total-price">总计：1099元</p>
+            <p class="total-price">总计：{{product.price}}元</p>
           </div>
           <div class="btn-group">
-            <button class="btn-huge add-cart">加入购物车</button>
+            <button class="btn-huge add-cart" @click="addCart">加入购物车</button>
             <button class="prefer">
               <i class="icon-heart"></i>
               <span>喜欢</span>
@@ -93,6 +94,9 @@ export default {
   },
   data() {
     return {
+      productId: this.$route.params.id, // 获取商品 id
+      version: 1, // 商品版本切换
+      product: {}, // 商品信息
       swiperOption: {
         autoplay:true,
         loop: true,
@@ -114,6 +118,25 @@ export default {
         '/imgs/detail/phone-3.jpg',
         '/imgs/detail/phone-4.jpg'
       ]
+    }
+  },
+  mounted() {
+    this.getProductInfo();
+  },
+  methods: {
+    getProductInfo() {
+      this.axios.get(`/products/${this.productId}`).then(res => {
+        this.product = res;
+      })
+    },
+    addCart() {
+      this.axios.post('/carts', {
+        productId: this.productId,
+        selected: true
+      }).then((res = {cartTotalQuantity: 0}) => {
+        this.$store.dispatch('saveCartCount', res.cartTotalQuantity);
+        this.$router.push('/cart');
+      })
     }
   }
 }
@@ -146,7 +169,7 @@ export default {
       }
       .info {
         width: 584px;
-        padding-bottom:50px;
+        padding-bottom: 50px;
         .base {
           padding: 20px 0;
           border-bottom: 1px solid $colorH;
@@ -196,12 +219,13 @@ export default {
           }
           .item {
             display: inline-block;
-            width: 215px;
+            width: 285px;
             text-align: center;
             margin: 20px 10px 20px 0;
-            padding: 15px 35px;
+            padding: 15px 0;
             border: 1px solid $colorH;
             font-size: $fontI;
+            cursor: pointer;
             .name {
               color: $colorI;
             }
@@ -215,10 +239,10 @@ export default {
               width: 14px;
               height: 16px;
               vertical-align: middle;
-              margin-right: 10px;
+              margin: -2px 10px 0 0;
               background-color: $colorC;
             }
-            &.selected {
+            &.checked {
               border-color: $colorA;
               .name {
                 color: $colorA;
@@ -247,11 +271,13 @@ export default {
             font-size: $fontI;
             color: $colorG;
             border: none;
+            cursor:pointer;
             background-color: $colorA;
           }
           .prefer {
             width: 142px;
             height: 54px;
+            cursor:pointer;
             color: $colorG;
             font-size: $fontI;
             background-color: #bbb;
