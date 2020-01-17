@@ -160,7 +160,9 @@ export default {
 @import "../assets/scss/mixin.scss";
 .product {
   &-param {
-    z-index: 10;
+    .btn {
+      margin-left: 10px;
+    }
   }
   &-desc {
     background-color: $colorG;
@@ -391,14 +393,4 @@ export default {
 }
 </style>
 <style lang="scss">
-.swiper-pagination-sliver {
-  display: inline-block;
-  width: 30px;
-  height: 3px;
-  margin: 0 7px;
-  background-color: #ccc;
-}
-.swiper-pagination-sliver-active {
-  background-color: #666;
-}
 </style>

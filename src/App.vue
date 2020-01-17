@@ -30,4 +30,15 @@ export default {
 @import "./assets/scss/reset.scss";
 @import "./assets/scss/config.scss";
 @import "./assets/scss/button.scss";
+.swiper-pagination-sliver {
+  display: inline-block;
+  width: 30px;
+  height: 3px;
+  margin: 0 7px;
+  background-color: #ccc;
+  cursor: pointer;
+}
+.swiper-pagination-sliver-active {
+  background-color: #666;
+}
 </style>

@@ -49,6 +49,7 @@ export default {
   line-height: 70px;
   border-top: 1px solid $colorH;
   background-color: $colorG;
+  z-index: 30;
   &.isFixed {
     position: fixed;
     top: 0;
@@ -66,9 +67,9 @@ export default {
       font-size: $fontJ;
       .param-link {
         color: $colorC;
-        padding: 0 10px;
       }
       .vertical-line {
+        padding: 0 10px;
         color: $colorD;
       }
     }
