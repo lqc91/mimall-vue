@@ -30,6 +30,7 @@ export default {
 @import "./assets/scss/reset.scss";
 @import "./assets/scss/config.scss";
 @import "./assets/scss/button.scss";
+@import "./assets/scss/base.scss";
 .swiper-pagination-sliver {
   display: inline-block;
   width: 30px;
