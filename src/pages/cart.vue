@@ -6,7 +6,7 @@
         <div class="list">
           <div class="list-head">
             <p class="check">
-              <i class="check-icon checked"></i>
+              <i class="check-icon" :class="{checked: allChecked}" @click="toggleAll"></i>
               <span class="check-txt">全选</span>
             </p>
             <p class="product-name">商品名称</p>
@@ -16,73 +16,32 @@
             <p class="operate">操作</p>
           </div>
           <ul>
-            <li class="list-item">
+            <li class="list-item" v-for="(item, index) in list" :key="index">
               <p class="check">
-                <i class="check-icon"></i>
+                <i
+                  class="check-icon"
+                  :class="{checked: item.productSelected}"
+                  @click="updateCart(item)"
+                ></i>
               </p>
-              <a class="product-link" href="javascript:;">
-                <img
-                  class="product-img"
-                  src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6f2493e6c6fe8e2485c407e5d75e3651.jpg"
-                  alt="小米8 6GB 全息幻彩紫 64GB"
-                />
-                <span class="product-name ellipsis">小米8 6GB 全息幻彩紫 64GB</span>
-              </a>
-              <p class="unit-price">1999元</p>
+              <router-link
+                class="product-link"
+                :to="{name: 'product', params: {
+                id: item.productId
+              }}"
+              >
+                <img class="product-img" v-lazy="item.productMainImage" alt="小米8 6GB 全息幻彩紫 64GB" />
+                <span class="product-name">{{item.productName}} {{item.productSubtitle}}</span>
+              </router-link>
+              <p class="unit-price">{{item.productPrice}}元</p>
               <p class="quantity">
-                <button class="button-minus">-</button>
-                <input class="quantity-num" type="text" value="1" />
-                <button class="button-plus">+</button>
+                <button class="button-minus" @click="updateCart(item, '-')">-</button>
+                <input class="quantity-num" type="text" :value="item.quantity" />
+                <button class="button-plus" @click="updateCart(item, '+')">+</button>
               </p>
-              <p class="total-price">1999元</p>
+              <p class="total-price">{{item.productPrice * item.quantity}}元</p>
               <p class="operate">
-                <i class="icon-delete"></i>
-              </p>
-            </li>
-            <li class="list-item">
-              <p class="check">
-                <i class="check-icon"></i>
-              </p>
-              <a class="product-link" href="javascript:;">
-                <img
-                  class="product-img"
-                  src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6f2493e6c6fe8e2485c407e5d75e3651.jpg"
-                  alt="小米8 6GB 全息幻彩紫 64GB"
-                />
-                <span class="product-name ellipsis">小米8 6GB 全息幻彩紫 64GB</span>
-              </a>
-              <p class="unit-price">1999元</p>
-              <p class="quantity">
-                <button class="button-minus">-</button>
-                <input class="quantity-num" type="text" value="1" />
-                <button class="button-plus">+</button>
-              </p>
-              <p class="total-price">1999元</p>
-              <p class="operate">
-                <i class="icon-delete"></i>
-              </p>
-            </li>
-            <li class="list-item">
-              <p class="check">
-                <i class="check-icon"></i>
-              </p>
-              <a class="product-link" href="javascript:;">
-                <img
-                  class="product-img"
-                  src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6f2493e6c6fe8e2485c407e5d75e3651.jpg"
-                  alt="小米8 6GB 全息幻彩紫 64GB"
-                />
-                <span class="product-name ellipsis">小米8 6GB 全息幻彩紫 64GB</span>
-              </a>
-              <p class="unit-price">1999元</p>
-              <p class="quantity">
-                <button class="button-minus">-</button>
-                <input class="quantity-num" type="text" value="1" />
-                <button class="button-plus">+</button>
-              </p>
-              <p class="total-price">1999元</p>
-              <p class="operate">
-                <i class="icon-delete"></i>
+                <i class="icon-delete" @click="delProductConfirm(item)"></i>
               </p>
             </li>
           </ul>
@@ -93,22 +52,33 @@
             <span class="vertical-line">|</span>
             <span>
               共
-              <span class="num">3</span> 件商品，已选择
-              <span class="num">3</span> 件
+              <span class="num">{{list.length}}</span> 件商品，已选择
+              <span class="num">{{checkedNum}}</span> 件
             </span>
           </div>
           <div class="right">
             <span>
               合计：
-              <span class="cart-total-price">2897</span>元
+              <span class="cart-total-price">{{cartTotalPrice}}</span>元
             </span>
-            <button class="settle btn-large">去结算</button>
+            <button class="settle btn-large" @click="order">去结算</button>
           </div>
         </div>
       </div>
     </div>
     <service-bar></service-bar>
     <nav-footer></nav-footer>
+    <modal
+      title="提示"
+      modalType="middle"
+      :showModal="showModal"
+      @submit="confirmDelProduct(productId)"
+      @cancel="showModal = false"
+    >
+      <template v-slot:modal-body>
+        <p>确定删除该商品？</p>
+      </template>
+    </modal>
   </div>
 </template>
 
@@ -116,13 +86,97 @@
 import OrderHeader from '../components/OrderHeader'
 import ServiceBar from './../components/ServiceBar'
 import NavFooter from '../components/NavFooter'
+import Modal from '../components/Modal.vue'
 
 export default {
   name: 'cart',
   components: {
     OrderHeader,
     ServiceBar,
-    NavFooter
+    NavFooter,
+    Modal
+  },
+  data() {
+    return {
+      list: [], // 商品列表
+      allChecked: false, // 是否全选
+      cartTotalPrice: 0, // 商品总金额
+      checkedNum: 0, // 选中商品数量
+      productId: 0, // 待删除商品id
+      showModal: false
+    }
+  },
+  mounted() {
+    this.getCartList();
+  },
+  methods: {
+    // 获取购物车列表
+    getCartList() {
+      this.axios.get('/carts').then(res => {
+        this.renderData(res);
+      })
+    },
+    // 更新购物车某商品数量及该商品单选状态
+    updateCart(item, type) {
+      let quantity = item.quantity,
+          selected = item.productSelected;
+      if (type === '-') {
+        if (quantity === 1) {
+          alert('商品至少保留一件');
+          return;
+        }
+        --quantity;
+      } else if (type === '+') {
+        if (quantity > item.productStock) {
+          alert('购买数量不能能超过库存数量');
+          return;
+        }
+        ++quantity;
+      } else {
+        selected = !item.productSelected;
+      }
+      this.axios.put(`/carts/${item.productId}`, {
+        quantity,
+        selected
+      }).then(res => {
+        this.renderData(res);
+      })
+    },
+    // 删除商品确认
+    delProductConfirm(item) {
+      this.showModal = true;
+      this.productId = item.productId;
+    },
+    // 确定删除商品
+    confirmDelProduct(productId) {
+      this.delProduct(productId);
+      this.showModal = false;
+    },
+    // 删除购物车某商品
+    delProduct(productId) {
+      this.axios.delete(`/carts/${productId}`).then(res => this.renderData(res));
+    },
+    // 控制全选
+    toggleAll() {
+      let url = this.allChecked ? '/carts/unSelectAll' : '/carts/selectAll';
+      this.axios.put(url).then(res => this.renderData(res))
+    },
+    // 公共赋值
+    renderData(res) {
+      this.list = res.cartProductVoList || [];
+        this.allChecked = res.selectedAll;
+        this.cartTotalPrice = res.cartTotalPrice;
+        this.checkedNum = this.list.filter(item => item.productSelected).length;
+    },
+    // 结算
+    order() {
+      let allUnChecked = this.list.every(item => !item.productSelected);
+      if (allUnChecked) {
+        alert('未选中商品，无法结算');
+      } else {
+        this.$router.push('/order/confirm');
+      }
+    }
   }
 }
 </script>
@@ -218,6 +272,7 @@ export default {
               line-height: 30px;
               padding-left: 30px;
               overflow: hidden;
+              text-align: left;
             }
           }
           .unit-price {
@@ -289,6 +344,7 @@ export default {
             border: none;
             color: $colorG;
             background-color: $colorA;
+            cursor: pointer;
           }
         }
       }
