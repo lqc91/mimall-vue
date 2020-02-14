@@ -5,6 +5,7 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import VueLazyLoad from "vue-lazyload";
 import VueCookie from "vue-cookie";
+import { Message } from "element-ui";
 import App from "./App.vue";
 
 // 根据前端跨域方式调整
@@ -31,7 +32,7 @@ axios.interceptors.response.use(response => {
     }
     return Promise.reject(res);
   } else {
-    alert(res.msg);
+    this.$message.warning(res.msg);
     return Promise.reject(res);
   }
 });
@@ -41,6 +42,9 @@ Vue.use(VueLazyLoad, {
   loading: "/imgs/loading-svg/loading-bars.svg"
 });
 Vue.use(VueCookie);
+Vue.use(Message);
+
+Vue.prototype.$message = Message;
 
 Vue.config.productionTip = false;
 

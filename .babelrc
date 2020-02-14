@@ -1,0 +1,21 @@
+{
+  "presets": [
+    [
+      // "es2015", // Babel v6.x
+      "@vue/cli-plugin-babel/preset", // Vue
+      // "@babel/preset-env", // Babel v7.x
+      {
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "component",
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
+      }
+    ]
+  ]
+}
