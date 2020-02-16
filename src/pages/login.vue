@@ -96,13 +96,18 @@ export default {
         password
       }).then(res => {
         this.$cookie.set('userId', res.id, {
-          expires: '1M'
+          expires: 'Session'
         });
         // 使用 dispatch
         // this.$store.dispatch('saveUserName', res.username)
         // 使用 mapActions
         this.saveUserName(res.username);
-        this.$router.push('/index');
+        this.$router.push({
+          name: 'index',
+          params: {
+            from: 'login'
+          }
+        });
       })
     },
     // 使用 mapActions

@@ -10,6 +10,7 @@
         </div>
         <div class="topbar-user">
           <a class="topbar-link" href="javascript:;" v-if="username">{{username}}</a>
+          <a class="topbar-link" to="/login" v-if="username" @click="logout">退出</a>
           <router-link class="topbar-link" to="/login" v-else>登录</router-link>
           <router-link class="topbar-link" to="/order" v-if="username">我的订单</router-link>
           <router-link class="topbar-link topbar-cart" to="/cart">
@@ -153,7 +154,11 @@ export default {
     ...mapState(['username', 'cartCount'])
   },
   mounted() {
-    this.getProductList()
+    this.getProductList();
+    let params = this.$route.params;
+    if (params && params.from === 'login') {
+      this.getCartCount();
+    }
   },
   methods: {
     getProductList() {
@@ -164,6 +169,21 @@ export default {
         }
       }).then(res => {
         this.phoneList = res.list;
+      })
+    },
+    getCartCount() {
+      this.axios.get('/carts/products/sum').then((res = 0) => {
+        this.$store.dispatch('saveCartCount', res);
+      });
+    },
+    logout() {
+      this.axios.post('/user/logout').then(() => {
+        this.$cookie.set('userId', '', {
+          expires: '-1'
+        });
+        this.$store.dispatch('saveUserName', '');
+        this.$store.dispatch('saveCartCount', 0);
+        this.$message.success('退出成功');
       })
     }
   }
@@ -196,6 +216,7 @@ export default {
         .topbar-link {
           height: 39px;
           margin-right: 19px;
+          cursor: pointer;
         }
         .topbar-cart {
           width: 110px;
