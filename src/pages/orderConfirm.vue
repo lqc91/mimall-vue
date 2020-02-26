@@ -53,7 +53,7 @@
               class="addr"
             >{{item.receiverProvince + ' ' + item.receiverCity + ' ' + item.receiverDistrict + ' ' + item.receiverAddress}}</p>
             <p class="action">
-              <svg class="icon icon-del">
+              <svg class="icon icon-del" @click="delAddr(item)">
                 <use xlink:href="#icon-del" />
               </svg>
               <svg class="icon icon-edit">
@@ -131,18 +131,36 @@
         <button class="btn btn-large">去结算</button>
       </div>
     </div>
+    <modal
+      title="删除确认"
+      btnType="1"
+      :showModal="showDelModal"
+      @cancel="showDelModal = false"
+      @submit="submitAddr"
+    >
+      <template v-slot:body>
+        <p>您确认要删除此地址吗？</p>
+      </template>
+    </modal>
   </div>
 </template>
 
 <script>
+import Modal from "../components/Modal";
 export default {
   name: "order-confirm",
+  components: {
+    Modal
+  },
   data() {
     return {
       addrList: [], // 收货地址列表
       cartList: [], // 结算商品列表
       cartTotalPrice: 0, // 结算商品总金额
-      count: 0 // 结算商品数量
+      count: 0, // 结算商品数量
+      checkedItem: {}, // 选中的商品对象
+      userAction: "", // 用户行为 0：新增，1：编辑，2：删除
+      showDelModal: false // 是否显示删除弹框
     };
   },
   mounted() {
@@ -153,6 +171,36 @@ export default {
       this.axios.get("/shippings").then(res => {
         this.addrList = res.list;
       });
+    },
+    delAddr(item) {
+      this.checkedItem = item;
+      this.userAction = 2;
+      this.showDelModal = true;
+    },
+    // 地址删除、编辑、新增功能
+    submitAddr() {
+      let { checkedItem, userAction } = this;
+      let method, url;
+      if (userAction === 0) {
+        method = "post";
+        url = "/shippings";
+      } else if (userAction === 1) {
+        method = "put";
+        url = `/shippings/${checkedItem.id}`;
+      } else {
+        method = "delete";
+        url = `/shippings/${checkedItem.id}`;
+      }
+      this.axios[method](url).then(() => {
+        this.closeModal();
+        this.getAddrList();
+        this.$message.success("操作成功");
+      });
+    },
+    closeModal() {
+      this.checkedItem = {};
+      this.userAction = '';
+      this.showDelModal = false;
     },
     getCartList() {
       this.axios.get("/carts").then(res => {
@@ -270,8 +318,8 @@ export default {
                 margin-right: 10px;
               }
             }
-            .product-total-price{
-              color:$colorA;
+            .product-total-price {
+              color: $colorA;
             }
           }
         }
