@@ -46,36 +46,12 @@
       <div class="address">
         <p class="title">收获地址</p>
         <ul class="list">
-          <li class="item">
-            <p class="name">路凡</p>
-            <p class="tel">13912345678</p>
-            <p class="addr">河北省 石家庄市 长安区 沙马镇</p>
-            <p class="action">
-              <svg class="icon icon-del">
-                <use xlink:href="#icon-del" />
-              </svg>
-              <svg class="icon icon-edit">
-                <use xlink:href="#icon-edit" />
-              </svg>
-            </p>
-          </li>
-          <li class="item">
-            <p class="name">路凡</p>
-            <p class="tel">13912345678</p>
-            <p class="addr">河北省 石家庄市 长安区 沙马镇</p>
-            <p class="action">
-              <svg class="icon icon-del">
-                <use xlink:href="#icon-del" />
-              </svg>
-              <svg class="icon icon-edit">
-                <use xlink:href="#icon-edit" />
-              </svg>
-            </p>
-          </li>
-          <li class="item">
-            <p class="name">路凡</p>
-            <p class="tel">13912345678</p>
-            <p class="addr">河北省 石家庄市 长安区 沙马镇</p>
+          <li class="item" v-for="(item, index) in addrList" :key="index">
+            <p class="name">{{item.receiverName}}</p>
+            <p class="tel">{{item.receiverMobile}}</p>
+            <p
+              class="addr"
+            >{{item.receiverProvince + ' ' + item.receiverCity + ' ' + item.receiverDistrict + ' ' + item.receiverAddress}}</p>
             <p class="action">
               <svg class="icon icon-del">
                 <use xlink:href="#icon-del" />
@@ -96,36 +72,14 @@
       <div class="product">
         <p class="title">商品</p>
         <ul class="list">
-          <li class="item">
+          <li class="item" v-for="(item, index) in cartList" :key="index">
             <a class="link" href="javascript:;">
-              <p>
-                <img
-                  class="picture"
-                  src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/bd25cc614a670f4d5546fe82e239ef86.jpg"
-                  alt="product img"
-                />
-                <span>小米CC9 3200万自拍，4800万三摄</span>
+              <p class="name">
+                <img class="picture" v-lazy="item.productMainImage" alt="item.productName" />
+                <span>{{item.productName + ' ' + item.productSubtitle}}</span>
               </p>
-              <p>1799元×2</p>
-              <p>3598元</p>
-            </a>
-          </li>
-          <li class="item">
-            <a class="link" href="javascript:;">
-              <p>
-                <img
-                  class="picture"
-                  src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/bd25cc614a670f4d5546fe82e239ef86.jpg"
-                  alt="product img"
-                />
-                <span>小米CC9 3200万自拍，4800万三摄</span>
-              </p>
-              <p>
-                <span>1799元</span>
-                <span>×</span>
-                <span>2</span>
-              </p>
-              <p>3598元</p>
+              <p>{{item.productPrice}}元×{{item.quantity}}</p>
+              <p class="product-total-price">{{item.productTotalPrice}}元</p>
             </a>
           </li>
         </ul>
@@ -150,11 +104,11 @@
         <ul class="list-right">
           <li>
             <p class="name">商品件数：</p>
-            <p class="content">7件</p>
+            <p class="content">{{count}}件</p>
           </li>
           <li>
             <p class="name">商品总价：</p>
-            <p class="content">999元</p>
+            <p class="content">{{cartTotalPrice}}元</p>
           </li>
           <li>
             <p class="name">优惠活动：</p>
@@ -167,7 +121,7 @@
           <li>
             <p class="name">应付总额：</p>
             <p class="content">
-              <span class="total-price">6999</span>元
+              <span class="total-price">{{cartTotalPrice}}</span>元
             </p>
           </li>
         </ul>
@@ -182,7 +136,35 @@
 
 <script>
 export default {
-  name: "order-confirm"
+  name: "order-confirm",
+  data() {
+    return {
+      addrList: [], // 收货地址列表
+      cartList: [], // 结算商品列表
+      cartTotalPrice: 0, // 结算商品总金额
+      count: 0 // 结算商品数量
+    };
+  },
+  mounted() {
+    this.getAddrList(), this.getCartList();
+  },
+  methods: {
+    getAddrList() {
+      this.axios.get("/shippings").then(res => {
+        this.addrList = res.list;
+      });
+    },
+    getCartList() {
+      this.axios.get("/carts").then(res => {
+        let list = res.cartProductVoList;
+        this.cartTotalPrice = res.cartTotalPrice;
+        this.cartList = list.filter(item => item.productSelected);
+        this.cartList.map(item => {
+          this.count += item.quantity;
+        });
+      });
+    }
+  }
 };
 </script>
 
@@ -279,10 +261,17 @@ export default {
             margin: 5px;
             font-size: $fontI;
             color: $colorC;
-            .picture {
-              width: 30px;
-              height: 30px;
-              vertical-align: middle;
+            .name {
+              width: 500px;
+              .picture {
+                width: 30px;
+                height: 30px;
+                vertical-align: middle;
+                margin-right: 10px;
+              }
+            }
+            .product-total-price{
+              color:$colorA;
             }
           }
         }
@@ -323,7 +312,7 @@ export default {
         }
         .content {
           display: inline-block;
-          width: 80px;
+          width: 100px;
           color: $colorA;
           .total-price {
             font-size: $fontE;
@@ -336,13 +325,13 @@ export default {
       display: flex;
       justify-content: flex-end;
       margin: 36px -10px 0 0;
-      .btn{
-        cursor:pointer;
+      .btn {
+        cursor: pointer;
       }
-      .btn-base{
+      .btn-base {
         background-color: #fff;
-        color:$colorD;
-        border:1px solid $colorF;
+        color: $colorD;
+        border: 1px solid $colorF;
       }
     }
   }
