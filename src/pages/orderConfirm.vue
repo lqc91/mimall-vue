@@ -62,7 +62,7 @@
             </p>
           </li>
           <li class="item">
-            <a class="addr-add" href="javascript:;">
+            <a class="addr-add" href="javascript:;" @click="openAddrModal">
               <p class="icon-add"></p>
               <p>添加新地址</p>
             </a>
@@ -132,14 +132,62 @@
       </div>
     </div>
     <modal
+      title="添加收货地址"
+      btnType="3"
+      confirmTxt="保存"
+      :showModal="showEditModal"
+      @cancel="showEditModal = false"
+      @submit="submitAddr"
+    >
+      <template v-slot:modal-body>
+        <div class="edit-wrap">
+          <div class="item">
+            <input type="text" class="input" placeholder="姓名" v-model="checkedItem.receiverName" />
+            <input type="text" class="input" placeholder="手机号" v-model="checkedItem.receiverMobile" />
+          </div>
+          <div class="item">
+            <select name="province" v-model="checkedItem.receiverProvince">
+              <option value="北京">北京</option>
+              <option value="天津">天津</option>
+              <option value="河北">河北</option>
+            </select>
+            <select name="city" v-model="checkedItem.receiverCity">
+              <option value="北京">北京</option>
+              <option value="天津">天津</option>
+              <option value="石家庄">石家庄</option>
+            </select>
+            <select name="district" v-model="checkedItem.receiverDistrict">
+              <option value="昌平区">昌平区</option>
+              <option value="海淀区">海淀区</option>
+              <option value="东城区">东城区</option>
+              <option value="西城区">西城区</option>
+              <option value="顺义区">顺义区</option>
+              <option value="房山区">房山区</option>
+            </select>
+          </div>
+          <div class="item">
+            <textarea
+              class="textarea"
+              name="street"
+              placeholder="详细地址"
+              v-model="checkedItem.receiverAddress"
+            ></textarea>
+          </div>
+          <div class="item">
+            <input type="text" class="input" placeholder="邮编" v-model="checkedItem.receiverZip" />
+          </div>
+        </div>
+      </template>
+    </modal>
+    <modal
       title="删除确认"
       btnType="1"
       :showModal="showDelModal"
       @cancel="showDelModal = false"
       @submit="submitAddr"
     >
-      <template v-slot:body>
-        <p>您确认要删除此地址吗？</p>
+      <template v-slot:modal-body>
+        <p>您确定要删除此地址吗？</p>
       </template>
     </modal>
   </div>
@@ -160,7 +208,8 @@ export default {
       count: 0, // 结算商品数量
       checkedItem: {}, // 选中的商品对象
       userAction: "", // 用户行为 0：新增，1：编辑，2：删除
-      showDelModal: false // 是否显示删除弹框
+      showDelModal: false, // 是否显示删除弹框
+      showEditModal: false // 是否显示添加地址弹框
     };
   },
   mounted() {
@@ -169,8 +218,19 @@ export default {
   methods: {
     getAddrList() {
       this.axios.get("/shippings").then(res => {
-        this.addrList = res.list;
+        this.addrList = res.list.reverse().slice(0, 3);
       });
+    },
+    // 打开添加地址弹窗
+    openAddrModal() {
+      this.userAction = 0;
+      // 为 select 设置默认值
+      this.checkedItem = {
+        receiverProvince: "北京",
+        receiverCity: "北京",
+        receiverDistrict: "昌平区"
+      };
+      this.showEditModal = true;
     },
     delAddr(item) {
       this.checkedItem = item;
@@ -180,7 +240,7 @@ export default {
     // 地址删除、编辑、新增功能
     submitAddr() {
       let { checkedItem, userAction } = this;
-      let method, url;
+      let method, url, params;
       if (userAction === 0) {
         method = "post";
         url = "/shippings";
@@ -191,7 +251,47 @@ export default {
         method = "delete";
         url = `/shippings/${checkedItem.id}`;
       }
-      this.axios[method](url).then(() => {
+      if (userAction === 0 || userAction === 1) {
+        let {
+          receiverName,
+          receiverMobile,
+          receiverProvince,
+          receiverCity,
+          receiverDistrict,
+          receiverAddress,
+          receiverZip
+        } = checkedItem;
+        let errMsg = "";
+        if (!receiverName) {
+          errMsg = "请输入收货人名称";
+        } else if (!receiverMobile || !/\d{11}/.test(receiverMobile)) {
+          errMsg = "请输入正确的手机号";
+        } else if (!receiverProvince) {
+          errMsg = "请输入收货人所在省份";
+        } else if (!receiverCity) {
+          errMsg = "请输入收货人所在城市";
+        } else if (!receiverDistrict) {
+          errMsg = "请输入收货人所在区县";
+        } else if (!receiverAddress) {
+          errMsg = "请输入收货人详细地址";
+        } else if (!receiverZip || !/\d{6}/.test(receiverZip)) {
+          errMsg = "请输入正确的邮编";
+        }
+        if (errMsg) {
+          this.$message.error(errMsg);
+          return;
+        }
+        params = {
+          receiverName,
+          receiverMobile,
+          receiverProvince,
+          receiverCity,
+          receiverDistrict,
+          receiverAddress,
+          receiverZip
+        };
+      }
+      this.axios[method](url, params).then(() => {
         this.closeModal();
         this.getAddrList();
         this.$message.success("操作成功");
@@ -199,8 +299,9 @@ export default {
     },
     closeModal() {
       this.checkedItem = {};
-      this.userAction = '';
+      this.userAction = "";
       this.showDelModal = false;
+      this.showEditModal = false;
     },
     getCartList() {
       this.axios.get("/carts").then(res => {
@@ -380,6 +481,44 @@ export default {
         background-color: #fff;
         color: $colorD;
         border: 1px solid $colorF;
+      }
+    }
+  }
+  .edit-wrap {
+    .item {
+      margin-bottom: 20px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      .input {
+        width: 280px;
+        height: 40px;
+        line-height: 40px;
+        color: $colorC;
+        padding: 0 15px;
+        margin-right: 20px;
+        border: 1px solid $colorH;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      select {
+        width: 100px;
+        height: 40px;
+        margin-right: 20px;
+        padding: 0 15px;
+        border: 1px solid $colorH;
+        color: $colorC;
+      }
+      .textarea {
+        width: 100%;
+        height: 62px;
+        line-height: 30px;
+        padding: 0 15px;
+        box-sizing: border-box;
+        border: 1px solid $colorH;
+        font-family: Arial;
+        color: $colorC;
       }
     }
   }
