@@ -234,7 +234,7 @@ export default {
       // 为 select 设置默认值
       this.checkedItem = {
         receiverProvince: "北京",
-        receiverCity: "北京",
+        receiverCity: "北京市",
         receiverDistrict: "昌平区"
       };
       this.showEditModal = true;
