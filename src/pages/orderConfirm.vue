@@ -46,7 +46,13 @@
       <div class="address">
         <p class="title">收获地址</p>
         <ul class="list">
-          <li class="item" v-for="(item, index) in addrList" :key="index">
+          <li
+            class="item"
+            :class="{'checked': index == checkedIndex}"
+            @click="checkedIndex = index"
+            v-for="(item, index) in addrList"
+            :key="index"
+          >
             <p class="name">{{item.receiverName}}</p>
             <p class="tel">{{item.receiverMobile}}</p>
             <p
@@ -56,7 +62,7 @@
               <svg class="icon icon-del" @click="delAddr(item)">
                 <use xlink:href="#icon-del" />
               </svg>
-              <svg class="icon icon-edit">
+              <svg class="icon icon-edit" @click="editAddrModal(item)">
                 <use xlink:href="#icon-edit" />
               </svg>
             </p>
@@ -127,8 +133,8 @@
         </ul>
       </div>
       <div class="btn-group">
-        <button class="btn btn-large btn-base">返回购物车</button>
-        <button class="btn btn-large">去结算</button>
+        <router-link to="/cart" class="btn btn-large btn-base">返回购物车</router-link>
+        <button class="btn btn-large" @click="orderSubmit">去结算</button>
       </div>
     </div>
     <modal
@@ -152,9 +158,9 @@
               <option value="河北">河北</option>
             </select>
             <select name="city" v-model="checkedItem.receiverCity">
-              <option value="北京">北京</option>
-              <option value="天津">天津</option>
-              <option value="石家庄">石家庄</option>
+              <option value="北京市">北京市</option>
+              <option value="天津市">天津市</option>
+              <option value="石家庄市">石家庄</option>
             </select>
             <select name="district" v-model="checkedItem.receiverDistrict">
               <option value="昌平区">昌平区</option>
@@ -209,7 +215,8 @@ export default {
       checkedItem: {}, // 选中的商品对象
       userAction: "", // 用户行为 0：新增，1：编辑，2：删除
       showDelModal: false, // 是否显示删除弹框
-      showEditModal: false // 是否显示添加地址弹框
+      showEditModal: false, // 是否显示添加地址弹框
+      checkedIndex: 0 // 当前选中的收货地址index
     };
   },
   mounted() {
@@ -230,6 +237,13 @@ export default {
         receiverCity: "北京",
         receiverDistrict: "昌平区"
       };
+      this.showEditModal = true;
+    },
+    // 编辑添加地址弹窗
+    editAddrModal(item) {
+      this.userAction = 1;
+      // 为 select 设置默认值
+      this.checkedItem = item;
       this.showEditModal = true;
     },
     delAddr(item) {
@@ -312,6 +326,26 @@ export default {
           this.count += item.quantity;
         });
       });
+    },
+    // 订单提交
+    orderSubmit() {
+      let item = this.addrList[this.checkedIndex];
+      if (!item) {
+        this.$message.error("请选择收货地址");
+        return;
+      }
+      this.axios
+        .post("/orders", {
+          shippingId: item.id
+        })
+        .then(res => {
+          this.$router.push({
+            path: "/order/pay",
+            query: {
+              orderNo: res.orderNo
+            }
+          });
+        });
     }
   }
 };
@@ -347,6 +381,10 @@ export default {
           box-sizing: border-box;
           margin-right: 15px;
           border: 1px solid $colorH;
+          cursor: pointer;
+          &.checked {
+            border-color: $colorA;
+          }
           .name {
             font-size: $fontH;
           }
