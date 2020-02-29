@@ -35,7 +35,7 @@
         <ul class="info" v-if="showOrderDetail">
           <li class="item">
             <p class="name">订单号：</p>
-            <p class="content highlight">{{orderNo}}</p>
+            <p class="content highlight">{{orderId}}</p>
           </li>
           <li class="item">
             <p class="name">收货信息：</p>
@@ -62,20 +62,28 @@
         </div>
       </div>
     </div>
+    <wechat-pay v-if="showPayModal" @close="closePayModal" :payQRCode="payQRCode"></wechat-pay>
   </div>
 </template>
 
 <script>
+import QRCode from "qrcode";
+import WechatPay from "./../components/WechatPay";
 export default {
   name: "order-pay",
+  components: {
+    WechatPay
+  },
   data() {
     return {
-      orderNo: this.$route.query.orderNo, // 订单号
+      orderId: this.$route.query.orderNo, // 订单号
       receiverInfo: "", // 收货人信息：姓名，电话，地址
       payment: 0, // 订单金额
       orderDetail: {}, // 订单详情
       showOrderDetail: false, // 是否显示订单详情
-      payType: 0 // 支付类型，1 为支付宝，2 为微信
+      payType: 0, // 支付类型，1 为支付宝，2 为微信
+      showPayModal: false, // 是否显示微信支付二维码
+      payQRCode: "" // 微信支付二维码
     };
   },
   mounted() {
@@ -83,18 +91,44 @@ export default {
   },
   methods: {
     getOrderDetail() {
-      this.axios.get(`/orders/${this.orderNo}`).then(res => {
+      this.axios.get(`/orders/${this.orderId}`).then(res => {
         let item = res.shippingVo;
-        let num = item.receiverMobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+        let num = item.receiverMobile.replace(
+          /(\d{3})\d{4}(\d{4})/,
+          "$1****$2"
+        );
         this.receiverInfo = `${item.receiverName} ${num} ${item.receiverProvince} ${item.receiverCity} ${item.receiverDistrict} ${item.receiverAddress}`;
         this.payment = res.payment;
         this.orderDetail = res.orderItemVoList;
       });
     },
     paySubmit(payType) {
+      this.payType = payType;
       if (payType === 1) {
-        window.open(`/#/order/alipay?orderId=${this.orderNo}`, '_blank');
+        window.open(`/#/order/alipay?orderId=${this.orderId}`, "_blank");
       }
+      if (payType === 2) {
+        this.showPayModal = true;
+        this.axios
+          .post("/pay", {
+            orderId: this.orderId,
+            orderName: "Vue高仿小米商城",
+            amount: 0.01,
+            payType: 2
+          })
+          .then(res => {
+            QRCode.toDataURL(res.content)
+              .then(url => {
+                this.payQRCode = url;
+              })
+              .catch(() => {
+                this.$message.error("微信二维码生成失败，请稍后重试");
+              });
+          });
+      }
+    },
+    closePayModal() {
+      this.showPayModal = false;
     }
   }
 };
@@ -215,8 +249,8 @@ export default {
         background-size: contain;
         background-repeat: no-repeat;
         background-origin: content-box;
-        &.checked{
-          border-color:$colorA;
+        &.checked {
+          border-color: $colorA;
         }
       }
       .alipay {
