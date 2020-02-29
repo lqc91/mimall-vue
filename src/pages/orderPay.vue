@@ -57,8 +57,8 @@
         <p class="title">选择以下支付方式付款</p>
         <div>
           <p class="content">支付平台</p>
-          <button class="alipay"></button>
-          <button class="wechat"></button>
+          <button class="alipay" :class="{'checked': payType === 1}" @click="paySubmit(1)"></button>
+          <button class="wechat" :class="{'checked': payType === 2}" @click="paySubmit(2)"></button>
         </div>
       </div>
     </div>
@@ -74,7 +74,8 @@ export default {
       receiverInfo: "", // 收货人信息：姓名，电话，地址
       payment: 0, // 订单金额
       orderDetail: {}, // 订单详情
-      showOrderDetail: false // 是否显示订单详情
+      showOrderDetail: false, // 是否显示订单详情
+      payType: 0 // 支付类型，1 为支付宝，2 为微信
     };
   },
   mounted() {
@@ -89,6 +90,11 @@ export default {
         this.payment = res.payment;
         this.orderDetail = res.orderItemVoList;
       });
+    },
+    paySubmit(payType) {
+      if (payType === 1) {
+        window.open(`/#/order/alipay?orderId=${this.orderNo}`, '_blank');
+      }
     }
   }
 };
@@ -209,6 +215,9 @@ export default {
         background-size: contain;
         background-repeat: no-repeat;
         background-origin: content-box;
+        &.checked{
+          border-color:$colorA;
+        }
       }
       .alipay {
         padding: 12px 41px;
