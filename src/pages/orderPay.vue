@@ -122,7 +122,23 @@ export default {
     paySubmit(payType) {
       this.payType = payType;
       if (payType === 1) {
-        window.open(`/#/order/alipay?orderId=${this.orderId}`, "_blank");
+        this.axios.get(`/orders/${this.orderId}`).then(res => {
+          if (res.status === 10) {
+            window.open(`/#/order/alipay?orderId=${this.orderId}`, "_blank");
+          } else if (
+            res.status === 20 ||
+            res.status === 40 ||
+            res.status === 50
+          ) {
+            this.$message.info("该订单已完成支付，请勿重复支付");
+          } else if (res.status === 0) {
+            this.$message.info("该订单已取消");
+          } else if (res.status === 60) {
+            this.$message.info("该交易已关闭");
+          } else {
+            this.$message.info("出现异常，请稍后重试，或取消订单");
+          }
+        });
       }
       if (payType === 2) {
         this.axios
