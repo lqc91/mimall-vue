@@ -20,6 +20,7 @@ axios.defaults.timeout = 8000;
 // status: 0 请求成功
 // status: 10 未登录
 axios.interceptors.response.use(response => {
+  // 状态码为 200 时的业务报错拦截
   let res = response.data;
   let path = location.hash;
   if (res.status === 0) {
@@ -32,9 +33,13 @@ axios.interceptors.response.use(response => {
     }
     return Promise.reject(res);
   } else {
-    this.$message.warning(res.msg);
+    Message.warning(res.msg);
     return Promise.reject(res);
   }
+}, (error) => { // 状态码非200时的请求错误
+  let res = error.response;
+  Message.error(res.data.message);
+  return Promise.reject(error)
 });
 
 Vue.use(VueAxios, axios);
@@ -45,6 +50,7 @@ Vue.use(VueCookie);
 Vue.use(Message);
 
 Vue.prototype.$message = Message;
+
 
 Vue.config.productionTip = false;
 

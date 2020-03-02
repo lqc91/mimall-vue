@@ -63,16 +63,31 @@
       </div>
     </div>
     <wechat-pay v-if="showPayModal" @close="closePayModal" :payQRCode="payQRCode"></wechat-pay>
+    <modal
+      title="支付确认"
+      btnType="3"
+      :showModal="confirmPayModal"
+      confirmTxt="已支付"
+      cancelTxt="未支付"
+      @cancel="confirmPayModal=false"
+      @submit="goOrderList"
+    >
+      <template v-slot:modal-body>
+        <p>请确认是否已完成支付</p>
+      </template>
+    </modal>
   </div>
 </template>
 
 <script>
 import QRCode from "qrcode";
 import WechatPay from "./../components/WechatPay";
+import Modal from "./../components/Modal";
 export default {
   name: "order-pay",
   components: {
-    WechatPay
+    WechatPay,
+    Modal
   },
   data() {
     return {
@@ -83,7 +98,9 @@ export default {
       showOrderDetail: false, // 是否显示订单详情
       payType: 0, // 支付类型，1 为支付宝，2 为微信
       showPayModal: false, // 是否显示微信支付二维码
-      payQRCode: "" // 微信支付二维码
+      payQRCode: "", // 微信支付二维码
+      confirmPayModal: false, // 确认支付弹窗
+      T: "" // 定时器ID
     };
   },
   mounted() {
@@ -108,7 +125,6 @@ export default {
         window.open(`/#/order/alipay?orderId=${this.orderId}`, "_blank");
       }
       if (payType === 2) {
-        this.showPayModal = true;
         this.axios
           .post("/pay", {
             orderId: this.orderId,
@@ -119,7 +135,9 @@ export default {
           .then(res => {
             QRCode.toDataURL(res.content)
               .then(url => {
+                this.showPayModal = true;
                 this.payQRCode = url;
+                this.loopOrderState();
               })
               .catch(() => {
                 this.$message.error("微信二维码生成失败，请稍后重试");
@@ -129,6 +147,22 @@ export default {
     },
     closePayModal() {
       this.showPayModal = false;
+      clearInterval(this.T);
+      this.confirmPayModal = true;
+    },
+    // 轮询当前订单支付状态
+    loopOrderState() {
+      this.T = setInterval(() => {
+        this.axios.get(`/orders/${this.orderId}`).then(res => {
+          if (res.status === 20) {
+            clearInterval(this.T);
+            this.goOrderList();
+          }
+        });
+      }, 500);
+    },
+    goOrderList() {
+      this.$router.push("/order/list");
     }
   }
 };
