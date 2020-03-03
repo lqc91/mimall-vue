@@ -3,6 +3,7 @@
     <order-header title="订单列表" tip="请谨防钓鱼链接或诈骗电话，了解更多>"></order-header>
     <div class="list-wrap">
       <div class="container">
+        <loading v-if="loading"></loading>
         <ul>
           <li class="order-item" v-for="(item, index) in orderList" :key="index">
             <div class="head">
@@ -46,19 +47,25 @@
             </div>
           </li>
         </ul>
+        <no-data v-if="!loading && orderList.length === 0"></no-data>
       </div>
     </div>
   </div>
 </template>
 <script>
 import OrderHeader from "./../components/OrderHeader";
+import Loading from './../components/Loading';
+import NoData from './../components/NoData';
 export default {
   name: "order-list",
   components: {
-    OrderHeader
+    OrderHeader,
+    Loading,
+    NoData
   },
   data() {
     return {
+      loading: true,
       orderList: []
     };
   },
@@ -67,8 +74,11 @@ export default {
   },
   methods: {
     getOrderList() {
-      this.axios.get("/orders").then(res => {
+      this.axios.get("/orders").then( res => {
+        this.loading = false;
         this.orderList = res.list;
+      }).catch(() => {
+        this.loading = false;
       });
     },
     toProductDetail(id) {
