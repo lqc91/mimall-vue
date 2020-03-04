@@ -6,6 +6,7 @@ import VueAxios from "vue-axios";
 import VueLazyLoad from "vue-lazyload";
 import VueCookie from "vue-cookie";
 import { Message } from "element-ui";
+import './assets/scss/element-variables.scss';
 import App from "./App.vue";
 
 // 根据前端跨域方式调整

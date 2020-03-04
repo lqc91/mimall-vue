@@ -48,25 +48,38 @@
           </li>
         </ul>
         <no-data v-if="!loading && orderList.length === 0"></no-data>
+        <el-pagination
+          class="pagination"
+          background
+          layout="prev, pager, next"
+          :page-size="pageSize"
+          :total="totalOrders"
+          @current-change="changePageNum"
+        ></el-pagination>
       </div>
     </div>
   </div>
 </template>
 <script>
 import OrderHeader from "./../components/OrderHeader";
-import Loading from './../components/Loading';
-import NoData from './../components/NoData';
+import Loading from "./../components/Loading";
+import NoData from "./../components/NoData";
+import { Pagination } from "element-ui";
 export default {
   name: "order-list",
   components: {
     OrderHeader,
     Loading,
-    NoData
+    NoData,
+    [Pagination.name]: Pagination
   },
   data() {
     return {
       loading: true,
-      orderList: []
+      orderList: [],
+      totalOrders: 0, // 订单总数
+      pageSize: 10, // 每页订单数
+      pageNum: 1 // 当前页码
     };
   },
   mounted() {
@@ -74,23 +87,36 @@ export default {
   },
   methods: {
     getOrderList() {
-      this.axios.get("/orders").then( res => {
-        this.loading = false;
-        this.orderList = res.list;
-      }).catch(() => {
-        this.loading = false;
-      });
+      this.axios
+        .get("/orders", {
+          params: {
+            pageSize: this.pageSize,
+            pageNum: this.pageNum
+          }
+        })
+        .then(res => {
+          this.loading = false;
+          this.orderList = res.list;
+          this.totalOrders = res.total;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     toProductDetail(id) {
       this.$router.push(`/product/${id}`);
     },
     toPay(orderNo) {
       this.$router.push({
-        path: '/order/pay',
+        path: "/order/pay",
         query: {
           orderNo
         }
-      })
+      });
+    },
+    changePageNum(pageNum) {
+      this.pageNum = pageNum;
+      this.getOrderList();
     }
   }
 };
@@ -159,10 +185,13 @@ export default {
               display: inline-block;
               font-size: $fontG;
               color: $colorA;
-              padding:0 8px;
+              padding: 0 8px;
             }
           }
         }
+      }
+      .pagination {
+        text-align: right;
       }
     }
   }
