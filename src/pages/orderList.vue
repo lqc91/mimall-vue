@@ -40,7 +40,7 @@
                 <span>{{item.statusDesc}}</span>
                 <i class="icon-arrow">></i>
               </a>
-              <a href="javascript:;" class="order-status" @click="toPay(item.orderNo)">
+              <a href="javascript:;" class="order-status" v-else @click="toPay(item.orderNo)">
                 <span>{{item.statusDesc}}</span>
                 <i class="icon-arrow">></i>
               </a>
