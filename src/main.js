@@ -23,15 +23,12 @@ axios.defaults.timeout = 8000;
 axios.interceptors.response.use(response => {
   // 状态码为 200 时的业务报错拦截
   let res = response.data;
-  let path = location.hash;
   if (res.status === 0) {
     return res.data;
   } else if (res.status === 10) {
     // 路由挂载在 Vue 实例上，在 vue 页面文件中才能使用 this.$router.push 进行页面跳转
     // 此处无法使用
-    if (path != "#/index") {
-      window.location.href = "/#/login";
-    }
+    window.location.href = "/#/login";
     return Promise.reject(res);
   } else {
     Message.warning(res.msg);
