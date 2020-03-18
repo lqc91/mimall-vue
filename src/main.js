@@ -48,7 +48,6 @@ Vue.use(VueLazyLoad, {
   loading: "/imgs/loading-svg/loading-bars.svg"
 });
 Vue.use(VueCookie);
-Vue.use(Message);
 
 Vue.prototype.$message = Message;
 
