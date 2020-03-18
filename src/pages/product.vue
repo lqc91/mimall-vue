@@ -108,7 +108,7 @@ export default {
       },
       slideList: [
         {
-          img: '/imgs/product/gallery-2.png',
+          img: '/imgs/product/gallery-2.jpg',
           desc: '小米8 AI变焦双摄拍摄'
         },
         {
@@ -116,7 +116,7 @@ export default {
           desc: '小米8 AI变焦双摄拍摄'
         },
         {
-          img: '/imgs/product/gallery-4.png',
+          img: '/imgs/product/gallery-4.jpg',
           desc: '小米8 AI变焦双摄拍摄'
         },
         {
@@ -233,7 +233,7 @@ export default {
       }
     }
     .desc-3 {
-      @include bgImg(100%, 638px, "/imgs/product/product-bg-3.png", cover);
+      @include bgImg(100%, 638px, "/imgs/product/product-bg-3.jpg", cover);
       vertical-align: middle;
     }
     .desc-4 {
@@ -276,7 +276,7 @@ export default {
       // transition 实现动画
       // .container {
       //   cursor: pointer;
-      //   @include bgImg(1226px, 540px, "/imgs/product/gallery-1.png", cover);
+      //   @include bgImg(1226px, 540px, "/imgs/product/gallery-1.jpg", cover);
       // }
       // .video-box {
       //   .overlay {
@@ -322,7 +322,7 @@ export default {
       // animation 实现动画
       .container {
         cursor: pointer;
-        @include bgImg(1226px, 540px, "/imgs/product/gallery-1.png", cover);
+        @include bgImg(1226px, 540px, "/imgs/product/gallery-1.jpg", cover);
       }
       .video-box {
         .overlay {
