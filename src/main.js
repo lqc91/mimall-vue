@@ -5,7 +5,7 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import VueLazyLoad from "vue-lazyload";
 import VueCookie from "vue-cookie";
-import { Message } from "element-ui";
+import { Message, Pagination } from "element-ui";
 import './assets/scss/element-variables.scss';
 import App from "./App.vue";
 
@@ -45,7 +45,7 @@ Vue.use(VueLazyLoad, {
   loading: "/imgs/loading-svg/loading-bars.svg"
 });
 Vue.use(VueCookie);
-
+Vue.use(Pagination);
 Vue.prototype.$message = Message;
 
 
