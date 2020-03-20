@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production' ? '/mimall-vue/' : '/',
   devServer: {
     host: "localhost",
     port: 8080,

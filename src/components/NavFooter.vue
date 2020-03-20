@@ -25,7 +25,7 @@
       Copyright ©2020
       <a
         class="copyright-link"
-        href="https://lufancode.gitee.io/mimall-vue/index"
+        href="https://lufancode.gitee.io/mimall-vue/"
         target="_blank"
       >mimall-vue</a> All Rights Reserved.
     </div>
