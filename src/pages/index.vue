@@ -107,7 +107,8 @@
     <modal
       title="提示"
       confirmTxt="查看购物车"
-      btnType="1"
+      cancelTxt="确定"
+      btnType="3"
       modalType="middle"
       :showModal="showModal"
       @submit="goToCart"
