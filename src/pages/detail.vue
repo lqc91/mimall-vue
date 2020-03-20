@@ -73,7 +73,7 @@
     <div class="tip">
       <div class="container">
         <h3 class="title">价格说明</h3>
-        <img src="/imgs/detail/item-price.jpeg" alt="价格说明" />
+        <img src="./../assets/imgs/detail/item-price.jpeg" alt="价格说明" />
       </div>
     </div>
     <service-bar></service-bar>
@@ -113,10 +113,10 @@ export default {
         }
       },
       slideList: [
-        '/imgs/detail/phone-1.jpg',
-        '/imgs/detail/phone-2.jpg',
-        '/imgs/detail/phone-3.jpg',
-        '/imgs/detail/phone-4.jpg'
+        require('./../assets/imgs/detail/phone-1.jpg'),
+        require('./../assets/imgs/detail/phone-2.jpg'),
+        require('./../assets/imgs/detail/phone-3.jpg'),
+        require('./../assets/imgs/detail/phone-4.jpg')
       ]
     }
   },
@@ -202,7 +202,7 @@ export default {
             font-size: $fontJ;
             color: $colorC;
             .icon-loc {
-              @include bgImg(20px, 22px, "/imgs/icon-loc.png", contain);
+              @include bgImg(20px, 22px, "./../assets/imgs/icons/icon-loc.png", contain);
               margin-right: 10px;
               vertical-align: middle;
             }
@@ -284,7 +284,7 @@ export default {
             border: none;
             margin-left: 20px;
             .icon-heart {
-              @include bgImg(18px, 16px, "/imgs/icon-heart.png", contain);
+              @include bgImg(18px, 16px, "./../assets/imgs/icons/icon-heart.png", contain);
               vertical-align: middle;
               margin-right: 8px;
             }

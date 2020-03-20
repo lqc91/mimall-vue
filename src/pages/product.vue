@@ -59,7 +59,7 @@
           <div class="overlay" v-if="showSlide"></div>
           <div class="video" :class="{'slide': showSlide}">
             <span @click="showSlide = false" class="icon-close"></span>
-            <video src="/imgs/product/video.mp4" muted autoplay controls="controls"></video>
+            <video src="./../assets/imgs/product/video.mp4" muted autoplay controls="controls"></video>
           </div>
         </div>-->
         <!-- animation 实现动画 -->
@@ -68,7 +68,7 @@
           <div class="overlay"></div>
           <div class="video" :class="showSlide">
             <span @click="closeVideo" class="icon-close"></span>
-            <video src="/imgs/product/video.mp4" muted autoplay controls="controls"></video>
+            <video src="./../assets/imgs/product/video.mp4" muted autoplay controls="controls"></video>
           </div>
         </div>
       </div>
@@ -108,23 +108,23 @@ export default {
       },
       slideList: [
         {
-          img: '/imgs/product/gallery-2.jpg',
+          img: require('./../assets/imgs/product/gallery-2.jpg'),
           desc: '小米8 AI变焦双摄拍摄'
         },
         {
-          img: '/imgs/product/gallery-3.png',
+          img: require('./../assets/imgs/product/gallery-3.png'),
           desc: '小米8 AI变焦双摄拍摄'
         },
         {
-          img: '/imgs/product/gallery-4.jpg',
+          img: require('./../assets/imgs/product/gallery-4.jpg'),
           desc: '小米8 AI变焦双摄拍摄'
         },
         {
-          img: '/imgs/product/gallery-5.jpg',
+          img: require('./../assets/imgs/product/gallery-5.jpg'),
           desc: '小米8 AI变焦双摄拍摄'
         },
         {
-          img: '/imgs/product/gallery-6.jpg',
+          img: require('./../assets/imgs/product/gallery-6.jpg'),
           desc: '小米8 AI变焦双摄拍摄'
         }
       ]
@@ -168,7 +168,7 @@ export default {
     background-color: $colorG;
     padding-bottom: 45px;
     .desc-1 {
-      @include bgImg(100%, 718px, "/imgs/product/product-bg-1.png", cover);
+      @include bgImg(100%, 718px, "./../assets/imgs/product/product-bg-1.png", cover);
       color: $colorB;
       text-align: center;
       .title {
@@ -227,13 +227,13 @@ export default {
         @include bgImg(
           1226px,
           397px,
-          "/imgs/product/product-bg-2.png",
+          "./../assets/imgs/product/product-bg-2.png",
           contain
         );
       }
     }
     .desc-3 {
-      @include bgImg(100%, 638px, "/imgs/product/product-bg-3.jpg", cover);
+      @include bgImg(100%, 638px, "./../assets/imgs/product/product-bg-3.jpg", cover);
       vertical-align: middle;
     }
     .desc-4 {
@@ -276,7 +276,7 @@ export default {
       // transition 实现动画
       // .container {
       //   cursor: pointer;
-      //   @include bgImg(1226px, 540px, "/imgs/product/gallery-1.jpg", cover);
+      //   @include bgImg(1226px, 540px, "./../assets/imgs/product/gallery-1.jpg", cover);
       // }
       // .video-box {
       //   .overlay {
@@ -309,7 +309,7 @@ export default {
       //       right: 20px;
       //       cursor: pointer;
       //       z-index: 30;
-      //       @include bgImg(20px, 20px, "/imgs/icon-close.png", contain);
+      //       @include bgImg(20px, 20px, "./../assets/imgs/icons/icon-close.png", contain);
       //     }
       //     video {
       //       width: 100%;
@@ -322,7 +322,7 @@ export default {
       // animation 实现动画
       .container {
         cursor: pointer;
-        @include bgImg(1226px, 540px, "/imgs/product/gallery-1.jpg", cover);
+        @include bgImg(1226px, 540px, "./../assets/imgs/product/gallery-1.jpg", cover);
       }
       .video-box {
         .overlay {
@@ -378,7 +378,7 @@ export default {
             right: 20px;
             cursor: pointer;
             z-index: 30;
-            @include bgImg(20px, 20px, "/imgs/icon-close.png", contain);
+            @include bgImg(20px, 20px, "./../assets/imgs/icons/icon-close.png", contain);
           }
           video {
             width: 100%;

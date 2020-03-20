@@ -1,6 +1,6 @@
 <template>
   <div class="no-data">
-    <img src="/imgs/icon-no-data.png" alt="no data">
+    <img src="./../assets/imgs/icons/icon-no-data.png" alt="no data">
     <p>暂无提交的订单记录</p>
   </div>
 </template>

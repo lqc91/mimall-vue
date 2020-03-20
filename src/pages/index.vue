@@ -15,7 +15,7 @@
                     >
                       <img
                         class="citem-img"
-                        v-lazy="sub ? sub.img : '/imgs/item-box-1.png'"
+                        v-lazy="sub ? sub.img : require('./../assets/imgs/menu/item-box-1.png')"
                         :alt="sub ? sub.name : '小米CC9'"
                       />
                       {{sub ? sub.name : '小米CC9'}}
@@ -76,7 +76,7 @@
       </div>
       <div class="banner">
         <router-link class="banner-link" :to="{name: 'product', params: {id: 30}}">
-          <img src="/imgs/banner-1.png" alt="小米CC全新系列发布会" />
+          <img src="./../assets/imgs/banner-1.png" alt="小米CC全新系列发布会" />
         </router-link>
       </div>
     </div>
@@ -85,7 +85,7 @@
         <h2 class="product-title">手机</h2>
         <div class="wrapper">
           <router-link class="banner-left" :to="{name: 'product', params: {id: 35}}">
-            <img v-lazy="'/imgs/mix-alpha.jpg'" alt="mix alpha" />
+            <img v-lazy="require('./../assets/imgs/ads/mix-alpha.jpg')" alt="mix alpha" />
           </router-link>
           <div class="list-box">
             <div class="list" v-for="(item, index) in phoneList" :key="index">
@@ -157,27 +157,27 @@ export default {
       slideList: [
         {
           id: '42',
-          img: '/imgs/slider/slide-1.jpg',
+          img: require('./../assets/imgs/slider/slide-1.jpg'),
           name: '小米CC9'
         },
         {
           id: '45',
-          img: '/imgs/slider/slide-2.jpg',
+          img: require('./../assets/imgs/slider/slide-2.jpg'),
           name: 'Redmi Note 7'
         },
         {
           id: '46',
-          img: '/imgs/slider/slide-3.jpg',
+          img: require('./../assets/imgs/slider/slide-3.jpg'),
           name: '小米全面屏电视E55A'
         },
         {
           id: '',
-          img: '/imgs/slider/slide-4.jpg',
+          img: require('./../assets/imgs/slider/slide-4.jpg'),
           name: '米家互联网洗烘一体机'
         },
         {
           id: '',
-          img: '/imgs/slider/slide-5.jpg',
+          img: require('./../assets/imgs/slider/slide-5.jpg'),
           name: '米家智能门锁 青春版'
         }
       ],
@@ -185,22 +185,22 @@ export default {
         [
           {
             id: 30,
-            img: '/imgs/item-box-1.png',
+            img: require('./../assets/imgs/menu/item-box-1.png'),
             name: '小米CC9'
           },
           {
             id: 31,
-            img: '/imgs/item-box-2.png',
+            img: require('./../assets/imgs/menu/item-box-2.png'),
             name: '小米8青春版'
           },
           {
             id: 32,
-            img: '/imgs/item-box-3.jpg',
+            img: require('./../assets/imgs/menu/item-box-3.jpg'),
             name: 'Redmi K20 Pro'
           },
           {
             id: 33,
-            img: '/imgs/item-box-4.jpg',
+            img: require('./../assets/imgs/menu/item-box-4.jpg'),
             name: '移动4G专区'
           }
         ],
@@ -213,22 +213,22 @@ export default {
       adsList: [
         {
           id: 33,
-          img: '/imgs/ads/ads-1.png',
+          img: require('./../assets/imgs/ads/ads-1.png'),
           name: '小米9'
         },
         {
           id: 48,
-          img: '/imgs/ads/ads-2.jpg',
+          img: require('./../assets/imgs/ads/ads-2.jpg'),
           name: 'Redmi K20 Pro'
         },
         {
           id: 45,
-          img: '/imgs/ads/ads-3.png',
+          img: require('./../assets/imgs/ads/ads-3.png'),
           name: 'Redmi Note 7'
         },
         {
           id: 47,
-          img: '/imgs/ads/ads-4.jpg',
+          img: require('./../assets/imgs/ads/ads-4.jpg'),
           name: '小米MIX3'
         }
       ],
@@ -306,7 +306,7 @@ export default {
               position: absolute;
               top: 17.5px;
               right: 30px;
-              @include bgImg(10px, 15px, "/imgs/icon-arrow.png");
+              @include bgImg(10px, 15px, "./../assets/imgs/icons/icon-arrow.png");
             }
           }
           .children {
@@ -439,7 +439,7 @@ export default {
                 cursor: pointer;
                 &:after {
                   content: "";
-                  @include bgImg(22px, 22px, "/imgs/icon-cart-hover.png");
+                  @include bgImg(22px, 22px, "./../assets/imgs/icons/icon-cart-hover.png");
                   margin-left: 5px;
                   vertical-align: middle;
                 }

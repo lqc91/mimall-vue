@@ -432,7 +432,7 @@ export default {
                 height: 30px;
                 border-radius: 50%;
                 margin-bottom: 10px;
-                background: url("/imgs/icon-add.png") center/14px 14px no-repeat,
+                background: url("./../assets/imgs/icons/icon-add.png") center/14px 14px no-repeat,
                   #e0e0e0;
               }
             }

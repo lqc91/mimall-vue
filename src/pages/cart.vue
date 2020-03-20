@@ -209,7 +209,7 @@ export default {
             border: 1px solid $colorH;
             cursor: pointer;
             &.checked {
-              @include bgImg(16px, 12px, "/imgs/icon-gou.png", contain);
+              @include bgImg(16px, 12px, "./../assets/imgs/icons/icon-gou.png", contain);
               background-color: $colorA;
               background-origin: content-box;
               border: none;
@@ -311,7 +311,7 @@ export default {
           .operate {
             width: 76px;
             .icon-delete {
-              @include bgImg(14px, 12px, "/imgs/icon-close.png", contain);
+              @include bgImg(14px, 12px, "./../assets/imgs/icons/icon-close.png", contain);
               vertical-align: middle;
               cursor: pointer;
             }

@@ -2,7 +2,7 @@
   <div class="login">
     <div class="container">
       <router-link class="login-header" to="index">
-        <img src="/imgs/login-logo.png" alt="login logo" />
+        <img src="./../assets/imgs/logo/login-logo.png" alt="login logo" />
       </router-link>
     </div>
     <div class="login-body">
@@ -140,7 +140,7 @@ export default {
   &-body {
     width: 100%;
     height: 576px;
-    background: url("/imgs/login-bg.jpg") no-repeat center;
+    background: url("./../assets/imgs/login-bg.jpg") no-repeat center;
     background-size: cover;
     .container {
       position: relative;
@@ -196,6 +196,7 @@ export default {
             background-color: $colorA;
             margin: 10px 0 15px;
             font-size: $fontI;
+            cursor:pointer;
           }
           .account-panel {
             display: flex;

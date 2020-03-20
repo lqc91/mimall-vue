@@ -42,7 +42,7 @@ axios.interceptors.response.use(response => {
 
 Vue.use(VueAxios, axios);
 Vue.use(VueLazyLoad, {
-  loading: "/imgs/loading-svg/loading-bars.svg"
+  loading: require("./assets/imgs/loading-bars.svg")
 });
 Vue.use(VueCookie);
 Vue.use(Pagination);

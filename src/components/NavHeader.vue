@@ -134,13 +134,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 export default {
-  name: 'nav-header',
+  name: "nav-header",
   data() {
     return {
       phoneList: []
-    }
+    };
   },
   computed: {
     // 不使用 mapState
@@ -151,43 +151,45 @@ export default {
     //   return this.$store.state.cartCount;
     // }
     // 使用 mapState
-    ...mapState(['username', 'cartCount'])
+    ...mapState(["username", "cartCount"])
   },
   mounted() {
     this.getProductList();
     let params = this.$route.params;
-    if (params && params.from === 'login') {
+    if (params && params.from === "login") {
       this.getCartCount();
     }
   },
   methods: {
     getProductList() {
-      this.axios.get('/products', {
-        params: {
-          categoryId: '100012',
-          pageSize: 6
-        }
-      }).then(res => {
-        this.phoneList = res.list;
-      })
+      this.axios
+        .get("/products", {
+          params: {
+            categoryId: "100012",
+            pageSize: 6
+          }
+        })
+        .then(res => {
+          this.phoneList = res.list;
+        });
     },
     getCartCount() {
-      this.axios.get('/carts/products/sum').then((res = 0) => {
-        this.$store.dispatch('saveCartCount', res);
+      this.axios.get("/carts/products/sum").then((res = 0) => {
+        this.$store.dispatch("saveCartCount", res);
       });
     },
     logout() {
-      this.axios.post('/user/logout').then(() => {
-        this.$cookie.set('userId', '', {
-          expires: '-1'
+      this.axios.post("/user/logout").then(() => {
+        this.$cookie.set("userId", "", {
+          expires: "-1"
         });
-        this.$store.dispatch('saveUserName', '');
-        this.$store.dispatch('saveCartCount', 0);
-        this.$message.success('退出成功');
-      })
+        this.$store.dispatch("saveUserName", "");
+        this.$store.dispatch("saveCartCount", 0);
+        this.$message.success("退出成功");
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -225,7 +227,7 @@ export default {
           text-align: center;
           margin-right: 0;
           .icon-cart {
-            @include bgImg(16px, 12px, "/imgs/icon-cart-checked.png");
+            @include bgImg(16px, 12px, "./../assets/imgs/icons/icon-cart-checked.png");
             margin-right: 4px;
           }
         }
@@ -237,6 +239,30 @@ export default {
       position: relative;
       @include flex();
       height: 112px;
+      .header-logo {
+        display: inline-block;
+        width: 55px;
+        height: 55px;
+        overflow: hidden;
+        background-color: $colorA;
+        .icon-logo {
+          display: inline-block;
+          width: 110px;
+          height: 55px;
+          &:before {
+            content: "";
+            @include bgImg(55px, 55px, "./../assets/imgs/logo/mi-logo.png", 55px);
+            transition: margin 0.2s;
+          }
+          &:after {
+            content: "";
+            @include bgImg(55px, 55px, "./../assets/imgs/logo/mi-home.png", 55px);
+          }
+          &:hover:before {
+            margin-left: -55px;
+          }
+        }
+      }
       .header-menu {
         position: absolute;
         left: 264px;
@@ -333,7 +359,7 @@ export default {
             padding: 0 14px;
           }
           .icon-search {
-            @include bgImg(18px, 18px, "/imgs/icon-search.png", 18px);
+            @include bgImg(18px, 18px, "./../assets/imgs/icons/icon-search.png", 18px);
             padding: 15px 18px;
             border: 1px solid #e0e0e0;
             border-left: 0;

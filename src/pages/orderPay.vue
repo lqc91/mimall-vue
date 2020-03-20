@@ -211,7 +211,7 @@ export default {
               width: 90px;
               height: 90px;
               border-radius: 50%;
-              background: url("/imgs/icon-gou.png") no-repeat center, #81c58c;
+              background: url("./../assets/imgs/icons/icon-gou.png") no-repeat center, #81c58c;
             }
             .base {
               float: left;
@@ -249,7 +249,7 @@ export default {
                 height: 10px;
                 margin-left: 10px;
                 cursor: pointer;
-                background: url("/imgs/icon-down.png") center/contain no-repeat;
+                background: url("./../assets/imgs/icons/icon-down.png") center/contain no-repeat;
                 &.up {
                   transition: all 0.5s;
                   transform: rotate(180deg);
@@ -310,11 +310,11 @@ export default {
         }
         .alipay {
           padding: 12px 41px;
-          background-image: url("/imgs/pay/icon-ali.png");
+          background-image: url("./../assets/imgs/icons/icon-ali.png");
         }
         .wechat {
           padding: 15px 37px;
-          background-image: url("/imgs/pay/icon-wechat.png");
+          background-image: url("./../assets/imgs/icons/icon-wechat.png");
         }
       }
     }

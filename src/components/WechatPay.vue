@@ -47,7 +47,7 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: url("/imgs/pay/icon-scan.png") left/contain no-repeat;
+    background: url("./../assets/imgs/icons/icon-scan.png") left/contain no-repeat;
     width: 296px;
     height: 485px;
     padding-right: 370px;
@@ -71,7 +71,7 @@ export default {
           right: 23px;
           width: 13px;
           height: 13px;
-          background: url("/imgs/icon-close.png") center/contain no-repeat;
+          background: url("./../assets/imgs/icons/icon-close.png") center/contain no-repeat;
           cursor: pointer;
         }
       }
